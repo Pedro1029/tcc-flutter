@@ -1,78 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/pessoa_models.dart';
+import '../provider/pessoas_provider.dart';
+import '../utils/app_routes.dart';
 
 class PessoasList extends StatelessWidget {
   final List<Pessoa> pessoas;
-  const PessoasList({
-    Key? key,
-    required this.pessoas,
-  }) : super(key: key);
+  // ignore: use_key_in_widget_constructors
+  const PessoasList(this.pessoas);
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<PessoaProvider>(context, listen: false);
+
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: pessoas.isEmpty
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20),
-                const Text('Nenhuma Pessoas Cadastrada'),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 200,
-                  child: Image.asset(
-                    'assets/images/waiting.png',
-                    fit: BoxFit.cover,
-                  ),
-                )
-              ],
-            )
-          : ListView.builder(
-              itemCount: pessoas.length,
-              itemBuilder: (ctx, index) {
-                final pessoa = pessoas[index];
-                return GestureDetector(
-                  onTap: () {},
-                  child: Card(
-                    elevation: 5,
-                    child: Row(
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                            ),
-                          ),
-                          padding: const EdgeInsets.all(5),
-                          child: pessoa.tipo == 'E'
-                              ? const Icon(Icons.factory_rounded)
-                              : const Icon(Icons.group_rounded),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              pessoa.cpfcnpj,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(pessoa.nome),
-                          ],
-                        ),
-                      ],
+      child: ListView.builder(
+        itemCount: pessoas.length,
+        itemBuilder: (ctx, index) {
+          final pessoa = pessoas[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(AppRoutes.MAIN_PAGE);
+            },
+            child: ListTile(
+              leading: CircleAvatar(
+                child: Icon(pessoa.tipo == 'E'
+                    ? Icons.factory_rounded
+                    : Icons.group_rounded),
+              ),
+              title: Text(
+                pessoa.cpfcnpj,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text(pessoa.nome),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoutes.CADASTRO_PESSOA,
+                          arguments: pessoa);
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.amber,
                     ),
                   ),
-                );
-              },
+                  IconButton(
+                    onPressed: () {
+                      provider.deletePessoa(pessoa);
+                    },
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                  ),
+                ]),
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 }
