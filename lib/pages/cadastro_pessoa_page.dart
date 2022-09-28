@@ -1,5 +1,9 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:truckerfinder/models/localizacao_models.dart';
 import 'package:truckerfinder/provider/pessoas_provider.dart';
 
 import '../models/pessoa_models.dart';
@@ -18,10 +22,28 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
 
   bool _isLoading = false;
 
+  Localizacao? localizacao;
+
   final _items = [
     const DropdownMenuItem(value: 'E', child: Text('Empresa')),
     const DropdownMenuItem(value: 'M', child: Text('Motorista')),
   ];
+
+  Future<void> _getCurrentUserLocation() async {
+    final locdata = await Location().getLocation();
+
+    localizacao = Localizacao(
+      adress: 'tktkktktkt',
+      latitude: locdata.latitude as double,
+      longitude: locdata.longitude as double,
+    );
+  }
+
+  @override
+  void initState() {
+    _getCurrentUserLocation();
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -54,13 +76,13 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
       _formKey.currentState?.save();
 
       final pessoa = Pessoa(
-        id: _formData['id'],
-        nome: _formData['nome'] as String,
-        tipo: _dropdownValue as String,
-        cpfcnpj: _formData['cpfcnpj'] as String,
-        cep: _formData['cep'] as String,
-        telefone: _formData['telefone'] as String,
-      );
+          id: _formData['id'],
+          nome: _formData['nome'] as String,
+          tipo: _dropdownValue as String,
+          cpfcnpj: _formData['cpfcnpj'] as String,
+          cep: _formData['cep'] as String,
+          telefone: _formData['telefone'] as String,
+          location: localizacao as Localizacao);
 
       setState(() {
         _isLoading = true;
@@ -104,6 +126,12 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
                       onSaved: (nome) => _formData['nome'] = nome as String,
                     ),
                     TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        (_dropdownValue == "E"
+                            ? CnpjInputFormatter()
+                            : CpfInputFormatter()),
+                      ],
                       initialValue: _formData['cpfcnpj'],
                       decoration: InputDecoration(
                         labelText: _dropdownValue == 'M' ? 'CPF' : 'CNPJ',
@@ -115,6 +143,10 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
                           _formData['cpfcnpj'] = cpfcnpj as String,
                     ),
                     TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        CepInputFormatter(),
+                      ],
                       initialValue: _formData['cep'],
                       decoration: const InputDecoration(
                         labelText: 'CEP',
@@ -125,6 +157,10 @@ class _CadastroPessoaPageState extends State<CadastroPessoaPage> {
                       onSaved: (cep) => _formData['cep'] = cep as String,
                     ),
                     TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        TelefoneInputFormatter(),
+                      ],
                       initialValue: _formData['telefone'],
                       decoration: const InputDecoration(
                         labelText: 'Telefone',

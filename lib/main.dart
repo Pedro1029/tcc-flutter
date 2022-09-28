@@ -4,6 +4,7 @@ import 'package:truckerfinder/pages/cadastro_frete_page.dart';
 import 'package:truckerfinder/pages/cadastro_pessoa_page.dart';
 import 'package:truckerfinder/pages/encontrar_motoristas_page.dart';
 import 'package:truckerfinder/pages/main_page.dart';
+import 'package:truckerfinder/provider/google_maps_provider.dart';
 import 'package:truckerfinder/provider/pessoas_provider.dart';
 import 'package:truckerfinder/utils/app_routes.dart';
 
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => PessoaProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => GoogleMapsProvider(),
+        )
       ],
       child: MaterialApp(
         title: 'Trucker Finder',

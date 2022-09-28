@@ -13,9 +13,8 @@ Pessoa _$PessoaFromJson(Map<String, dynamic> json) => Pessoa(
       nome: json['nome'] as String,
       cep: json['cep'] as String? ?? '',
       telefone: json['telefone'] as String? ?? '',
-    )
-      ..latitude = json['latitude'] as String
-      ..longitude = json['longitude'] as String;
+      location: Localizacao.fromJson(json['location'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PessoaToJson(Pessoa instance) => <String, dynamic>{
       'id': instance.id,
@@ -24,6 +23,5 @@ Map<String, dynamic> _$PessoaToJson(Pessoa instance) => <String, dynamic>{
       'nome': instance.nome,
       'cep': instance.cep,
       'telefone': instance.telefone,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'location': instance.location.toJson(),
     };

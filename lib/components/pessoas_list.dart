@@ -23,7 +23,10 @@ class PessoasList extends StatelessWidget {
           final pessoa = pessoas[index];
           return GestureDetector(
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.MAIN_PAGE);
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.MAIN_PAGE,
+                arguments: pessoa,
+              );
             },
             child: ListTile(
               leading: CircleAvatar(
@@ -41,8 +44,10 @@ class PessoasList extends StatelessWidget {
                 child: Row(children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.CADASTRO_PESSOA,
-                          arguments: pessoa);
+                      Navigator.of(context).pushNamed(
+                        AppRoutes.CADASTRO_PESSOA,
+                        arguments: pessoa,
+                      );
                     },
                     icon: const Icon(
                       Icons.edit,

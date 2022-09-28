@@ -10,6 +10,7 @@ class PessoaProvider with ChangeNotifier {
       'https://app-findertrucker-default-rtdb.firebaseio.com/';
 
   final List<Pessoa> _pessoas = [];
+  final List<Pessoa> _motoristas = [];
 
   Future<void> fetchAllPessoas() async {
     _pessoas.clear();
@@ -28,7 +29,25 @@ class PessoaProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchAllMotoristas() async {
+    _motoristas.clear();
+    var response = await http.get(Uri.parse('$_baseUrl/pessoas.json'));
+
+    if (response.body == 'null') return;
+
+    final Map<String, dynamic> data = json.decode(response.body);
+
+    for (String key in data.keys) {
+      final pessoa = Pessoa.fromJson(data[key]);
+      pessoa.id = key;
+      if (pessoa.tipo == 'M') _motoristas.add(pessoa);
+    }
+
+    notifyListeners();
+  }
+
   List<Pessoa> get all => [..._pessoas];
+  List<Pessoa> get allMotoristas => [..._motoristas];
 
   Future<void> save(Pessoa pessoa) async {
     if (pessoa.id == null) {
@@ -39,17 +58,10 @@ class PessoaProvider with ChangeNotifier {
   }
 
   Future<void> addPessoa(Pessoa pessoa) async {
+    pessoa.id = '1';
     var response = await http.post(
       Uri.parse("$_baseUrl/pessoas.json"),
-      body: json.encode(
-        {
-          'nome': pessoa.nome,
-          'tipo': pessoa.tipo,
-          'cpfcnpj': pessoa.cpfcnpj,
-          'cep': pessoa.cep,
-          'telefone': pessoa.telefone,
-        },
-      ),
+      body: json.encode(pessoa.toJson()),
     );
     var id = json.decode(response.body)['name'];
     pessoa.id = id;

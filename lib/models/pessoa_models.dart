@@ -1,17 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'localizacao_models.dart';
+
 part 'pessoa_models.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Pessoa {
+  
   String? id;
   final String tipo;
   final String cpfcnpj;
   final String nome;
   String cep;
   String telefone;
-  String latitude = '0';
-  String longitude = '0';
+  Localizacao location;
 
   Pessoa({
     this.id,
@@ -20,6 +22,7 @@ class Pessoa {
     required this.nome,
     this.cep = '',
     this.telefone = '',
+    required this.location,
   });
 
   factory Pessoa.fromJson(Map<String, dynamic> json) => _$PessoaFromJson(json);

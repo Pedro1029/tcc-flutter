@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:truckerfinder/utils/app_routes.dart';
 
+import '../models/pessoa_models.dart';
+import '../provider/pessoas_provider.dart';
+
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({Key? key}) : super(key: key);
+  final Pessoa pessoaSelected;
+  const AppDrawer({
+    required this.pessoaSelected,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Drawer(
       child: Column(
         children: [
@@ -18,6 +27,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.CADASTRO_FRETE,
+                arguments: pessoaSelected,
               );
             },
           ),
@@ -27,6 +37,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
                 AppRoutes.ENCONTRAR_MOTORISTAS,
+                arguments: pessoaSelected,
               );
             },
           ),
