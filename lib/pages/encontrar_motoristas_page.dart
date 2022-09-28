@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:truckerfinder/models/pessoa_models.dart';
-import 'package:truckerfinder/utils/location_util.dart';
 
 import '../components/app_drawer.dart';
-import '../provider/google_maps_provider.dart';
 import '../provider/pessoas_provider.dart';
 
 class EncontrarMotoristasPage extends StatefulWidget {
