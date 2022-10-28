@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:truckerfinder/provider/auth_provider.dart';
+import 'package:truckerfinder/pages/auth_or_home_page.dart';
 import 'package:truckerfinder/pages/cadastro_frete_page.dart';
 import 'package:truckerfinder/pages/cadastro_pessoa_page.dart';
 import 'package:truckerfinder/pages/encontrar_motoristas_page.dart';
 import 'package:truckerfinder/pages/home_page.dart';
-import 'package:truckerfinder/provider/google_maps_provider.dart';
 import 'package:truckerfinder/provider/pessoas_provider.dart';
 import 'package:truckerfinder/utils/app_routes.dart';
 
@@ -22,11 +23,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => PessoaProvider(),
+          create: (_) => Auth(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => GoogleMapsProvider(),
-        )
+        ChangeNotifierProxyProvider<Auth, PessoaProvider>(
+          create: (_) => PessoaProvider(Auth(), []),
+          update: (ctx, auth, previous) {
+            return PessoaProvider(
+              auth,
+              previous?.pessoas ?? [],
+            );
+          },
+        ),
       ],
       child: MaterialApp(
         title: 'Trucker Finder',
@@ -34,7 +41,8 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         routes: {
-          AppRoutes.MAIN: (ctx) => const MainPage(),
+          AppRoutes.AUTH_OR_HOME_PAGE: (ctx) => const AuthOrHomePage(),
+          AppRoutes.MAIN_PAGE: (ctx) => const MainPage(),
           AppRoutes.CADASTRO_PESSOA: (ctx) => const CadastroPessoaPage(),
           AppRoutes.HOME_PAGE: (ctx) => const HomePage(),
           AppRoutes.CADASTRO_FRETE: (ctx) => const CadastroFretePage(),

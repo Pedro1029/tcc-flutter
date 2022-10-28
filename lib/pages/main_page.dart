@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:truckerfinder/models/pessoa_models.dart';
+import 'package:truckerfinder/provider/auth_provider.dart';
 
 import '../components/pessoas_list.dart';
 import '../provider/pessoas_provider.dart';
@@ -27,7 +28,6 @@ class _MainPageState extends State<MainPage> {
     Provider.of<PessoaProvider>(context, listen: false)
         .fetchAllPessoas()
         .then((value) => {
-              print('false'),
               setState(() => {_isLoading = false}),
             });
     super.initState();
@@ -40,6 +40,17 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Main'),
+        actions: [
+          IconButton(
+            onPressed: () => {
+              Provider.of<Auth>(context, listen: false).logout(),
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.AUTH_OR_HOME_PAGE,
+              )
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

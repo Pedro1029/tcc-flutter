@@ -35,13 +35,48 @@ class _EncontrarMotoristasPageState extends State<EncontrarMotoristasPage> {
 
     motoristas.forEach((motorista) => {
           markers.add(Marker(
-            markerId: MarkerId(motorista.id as String),
+            markerId: MarkerId(motorista.id ?? ''),
             position: LatLng(
               motorista.location.latitude,
               motorista.location.longitude,
             ),
-            infoWindow: InfoWindow(title: motorista.nome),
-            onTap: (() {}),
+            onTap: () => {
+              showDialog(
+                context: context,
+                // ignore: prefer_const_constructors
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Informações'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => {},
+                      child: const Text('Avaliar'),
+                    ),
+                    TextButton(
+                      onPressed: () => {},
+                      child: const Text('Mensagem'),
+                    )
+                  ],
+                  content: SizedBox(
+                    height: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(),
+                        Text('Nome: ${motorista.nome}'),
+                        const Divider(),
+                        Text('CPF: ${motorista.cpfcnpj}'),
+                        const Divider(),
+                        Text('Cep: ${motorista.cep}'),
+                        const Divider(),
+                        Text('Telefone: ${motorista.telefone}'),
+                        const Divider(),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            },
           ))
         });
 
@@ -56,7 +91,7 @@ class _EncontrarMotoristasPageState extends State<EncontrarMotoristasPage> {
         initialCameraPosition: CameraPosition(
           target: LatLng(pessoaSelected.location.latitude,
               pessoaSelected.location.longitude),
-          zoom: 14.4746,
+          zoom: 10,
         ),
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
