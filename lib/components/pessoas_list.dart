@@ -24,7 +24,7 @@ class PessoasList extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
-                AppRoutes.MAIN_PAGE,
+                AppRoutes.HOME_PAGE,
                 arguments: pessoa,
               );
             },

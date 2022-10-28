@@ -14,8 +14,8 @@ class PessoaProvider with ChangeNotifier {
 
   Future<void> fetchAllPessoas() async {
     _pessoas.clear();
+    
     var response = await http.get(Uri.parse('$_baseUrl/pessoas.json'));
-
     if (response.body == 'null') return;
 
     final Map<String, dynamic> data = json.decode(response.body);
@@ -25,7 +25,7 @@ class PessoaProvider with ChangeNotifier {
       pessoa.id = key;
       _pessoas.add(pessoa);
     }
-
+    
     notifyListeners();
   }
 

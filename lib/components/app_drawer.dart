@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:truckerfinder/utils/app_routes.dart';
 
 import '../models/pessoa_models.dart';
-import '../provider/pessoas_provider.dart';
 
 class AppDrawer extends StatelessWidget {
   final Pessoa pessoaSelected;
@@ -19,7 +17,7 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: const Text('Bem Vindo!'),
+            title: const Text('Menu'),
           ),
           ListTile(
             leading: const Icon(Icons.add),
@@ -42,11 +40,22 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.search),
+            title: const Text('Encontrar Fretes'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed(
+                AppRoutes.ENCONTRAR_MOTORISTAS,
+                arguments: pessoaSelected,
+              );
+            },
+          ),
+          
+          ListTile(
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Sair'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(
-                AppRoutes.HOME,
+                AppRoutes.MAIN,
               );
             },
           ),
